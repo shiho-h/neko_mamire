@@ -8,7 +8,7 @@
 
   <div class="container-fluid">
       <div class="border" style="padding:20px; margin: 20px;">
-        <% if @user.id == current_user.id %>
+        <% if @user == current_user %>
         <h1 class="text-center">まいぺ～じ</h1>
         <% else %>
         <h1 class="text-center"><%= @user.name %>さんの投稿一覧</h1>
@@ -17,7 +17,7 @@
 
             <div class="row">
               <div class="col-3"> 
-                <% if @user.id == current_user.id %>
+                <% if @user == current_user %>
                 <div class="table-responsive">
                   <table class="table table-bordered"  style="table-layout:fixed;">
                      <td style="width:100px; padding: 50px">
@@ -65,13 +65,23 @@
                 <div> <i class="far fa-comment fa-fw"></i>
                   <%= link_to cat_image.comments.count, cat_image_path(cat_image.id) %>
 <!-- いいね -->
-                   <span id="favorites_buttons_<%= cat_image.id %>">
+                  <% if signed_in? %>
+                     <span id="favorites_buttons_<%= cat_image.id %>">
                      <%= render 'cat_images/favorite', cat_image: cat_image %>
                    </span>
+                  <% else %>
+                    <i class="far fa-heart fa-fw"></i>
+                      <%= "#{cat_image.favorites.count}" %>
+                  <% end %>
 <!-- お気に入り -->
-                   <span id="bookmarks_buttons_<%= cat_image.id %>">
+                  <% if signed_in? %>
+                  <span id="bookmarks_buttons_<%= cat_image.id %>">
                   <%= render 'cat_images/bookmark', cat_image: cat_image %>
                 </span>
+                    <% else %>
+                    <i class="far fa-bookmark fa-fw"></i>
+                        <%= "#{cat_image.bookmarks.count}" %>
+                    <% end %>
 <!-- tag -->
                 <div>
                   <% cat_image.tag_list.each do |tag| %>
